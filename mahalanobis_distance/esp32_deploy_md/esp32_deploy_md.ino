@@ -10,6 +10,7 @@
 // Library includes
 #include <Adafruit_MSA301.h>
 #include <Adafruit_Sensor.h>
+#include <Arduino_LSM9DS1.h>
 
 // Local includes
 #include "md_model-moving.h"
@@ -47,7 +48,7 @@ void setup() {
 #endif
 
   // Initialize accelerometer
-  if (!msa.begin()) {
+  if (!IMU.begin()) {
 #if DEBUG
     Serial.println("Failed to initialize MSA301");
 #endif
@@ -78,13 +79,14 @@ void loop() {
       prev_timestamp = timestamp;
       timestamp = millis();
 
+      float x, y, z;
       // Take sample measurement
-      msa.read();
+      IMU.readAcceleration(x, y, z);
 
       // Add readings to array
-      sample[i][0] = msa.x_g;
-      sample[i][1] = msa.y_g;
-      sample[i][2] = msa.z_g;
+      sample[i][0] = x;
+      sample[i][1] = y;
+      sample[i][2] = z;
 
       // Update sample counter
       i++;
